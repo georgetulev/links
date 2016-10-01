@@ -4,29 +4,26 @@
 
 <div class="row">
     <div class="col-md-8">
-        <h3>Community</h3>
+        <h3>
+            <a href="/community">Community</a>
 
-            <ul class="list-group">
-                @if(count($links))
-                    @foreach($links as $link)
-                        <li class="list-group-item">
-                            <span class="label label-default" style="background-color: {{ $link->channel->color }}">
-                                {{ $link->channel->title }}
-                            </span>
+            @if($channel->exists)
+                <span>&mdash; {{ $channel->title }}</span>
+            @endif
+        </h3>
 
-                            <a href="{{ $link->link }}" target="_blank">
-                                {{ $link->title }}
-                            </a>
+        <ul class="nav nav-tabs">
+            <li class="{{ request()->exists('popular') ? '' : 'active' }}">
+                <a href="{{ request()->url() }}">Most Recent</a>
+            </li>
 
-                            <small>
-                                Contributed by <a href="#">{{ $link->creator->name }}</a> {{$link->updated_at->diffForHumans()}}
-                            </small>
-                        </li>
-                    @endforeach
-                @else
-                    <li class="Links__link">No contributions yet!</li>
-                @endif
-            </ul>
+            <li class="{{ request()->exists('popular') ? 'active' : '' }}">
+                <a href="?popular">Most Popular</a>
+            </li>
+
+        </ul>
+
+            @include('community.list')
     </div>
 
     @include('partials.add-link')

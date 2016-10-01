@@ -2,8 +2,7 @@
 
 namespace App;
 
-use App\User;
-use App\Channel;
+use App\Exceptions\CommunityLinkAlreadySubmitted;
 use Illuminate\Database\Eloquent\Model;
 
 class CommunityLink extends Model
@@ -17,6 +16,15 @@ class CommunityLink extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Community link may have many votes.
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function votes()
+    {
+        return $this->hasMany(CommunityLinkVote::class,'community_link_id');
     }
 
     public static function from(User $user)
@@ -33,13 +41,33 @@ class CommunityLink extends Model
         return $link;
     }
 
+    /**
+     * Contribute the given community link.
+     *
+     * @param array $attributes
+     * @return bool
+     * @throws CommunityLinkAlreadySubmitted
+     */
     public function contribute($attributes)
     {
-        $this->fill($attributes)->save();
+        if($existing = $this->hasAlreadyBeenSubmitted($attributes['link'])){
+            $existing->touch();
+
+            throw new CommunityLinkAlreadySubmitted;
+        }
+
+        return $this->fill($attributes)->save();
     }
 
     public function channel(){
         return $this->belongsTo(Channel::class);
+    }
+
+    public function scopeForChannel($builder, $channel){
+        if($channel->exists){
+            return $builder->where('channel_id', $channel->id);
+        }
+            return $builder;
     }
 
     public function approve()
@@ -47,5 +75,13 @@ class CommunityLink extends Model
         $this->approved = true;
 
         return $this;
+    }
+
+
+    protected function hasAlreadyBeenSubmitted($link)
+    {
+
+        // ToDo  -> extend it by additionally cutting.....
+        return static::where('link', $link)->first();
     }
 }

@@ -27,4 +27,25 @@ class User extends Authenticatable
     public function isTrusted(){
         return !! $this->trusted;
     }
+
+    public function votes()
+    {
+        return $this->belongsToMany(CommunityLink::class, 'community_links_votes')
+            ->withTimestamps();
+    }
+
+    public function voteFor(CommunityLink $link)
+    {
+        return $this->votes()->sync([$link->id], false);
+    }
+
+    public function unvoteFor(CommunityLink $link)
+    {
+        return $this->votes()->detach($link);
+    }
+
+    public function votedFor(CommunityLink $link)
+    {
+        return $link->votes->contains('user_id', $this->id);
+    }
 }
