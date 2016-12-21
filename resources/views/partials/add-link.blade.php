@@ -1,7 +1,7 @@
 @if(Auth::check())
 <div class="col-md-4">
-    <h3>Contribute Link</h3>
-
+    <h3>CONTRIBUTE LINK</h3>
+    <hr>
     <div class="panel panel-default">
         <div class="panel-body">
             <form method="POST" action="/community">

@@ -8,7 +8,7 @@ class CommunityLinkVote extends Model
 {
     protected $table = 'community_links_votes';
 
-    protected $fillable = ['usr_id', 'community_link_id'];
+    protected $fillable = ['user_id', 'community_link_id'];
 
     public function toggle()
     {

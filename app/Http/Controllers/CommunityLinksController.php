@@ -20,7 +20,6 @@ class CommunityLinksController extends Controller
             request()->exists('popular'), $channel
         );
 
-
         $channels = Channel::orderBy('title', 'asc')->get();
 
         return view('community.index', compact('links', 'channels', 'channel'));
@@ -33,7 +32,6 @@ class CommunityLinksController extends Controller
     public function store(CommunityLinkForm $form)
     {
         try {
-
             $form->persist();
 
             if(auth()->user()->isTrusted()){
@@ -41,9 +39,8 @@ class CommunityLinksController extends Controller
             } else {
                 flash()->overlay('Thanks', 'The contribution will be approved shortly');
             }
-
-        } catch(CommunityLinkAlreadySubmitted $e){
-
+        } catch(CommunityLinkAlreadySubmitted $e)
+        {
             flash()->overlay(
                 "We'll instead bump the timestamps and bring that link back to the top. Thanks!",
                 'That link Has Already Been Submitted'

@@ -7,11 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommunityLink extends Model
 {
-
     protected $fillable = [
         'channel_id', 'title', 'link'
     ];
-
 
     public function creator()
     {
@@ -30,13 +28,12 @@ class CommunityLink extends Model
     public static function from(User $user)
     {
         $link = new static;
-
         $link->user_id = $user->id;
 
-        if($user->isTrusted()){
+        if($user->isTrusted())
+        {
             $link->approve();
         }
-        
 
         return $link;
     }
@@ -77,10 +74,8 @@ class CommunityLink extends Model
         return $this;
     }
 
-
     protected function hasAlreadyBeenSubmitted($link)
     {
-
         // ToDo  -> extend it by additionally cutting.....
         return static::where('link', $link)->first();
     }

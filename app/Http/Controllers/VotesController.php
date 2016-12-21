@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CommunityLink;
+use App\CommunityLinkVote;
 
 
 class VotesController extends Controller
@@ -19,18 +20,10 @@ class VotesController extends Controller
      */
     public function store(CommunityLink $link)
     {
-       // CommunityLinkVote::firstOrNew([
-       //     'user_id' => auth()->id(),
-       //     'community_link_id' => $link->id
-       // ])->toggle();
-
-        $user = auth()->user();
-
-        if($user->votedFor($link)){
-            $user->unvoteFor($link);
-        } else {
-            $user->voteFor($link);
-        }
+        CommunityLinkVote::firstOrNew([
+            'user_id' => auth()->id(),
+            'community_link_id' => $link->id
+        ])->toggle();
 
         return back();
     }
