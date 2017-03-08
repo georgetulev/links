@@ -26,7 +26,7 @@
             </li>
         @endforeach
     @else
-        <li class="Links__link">No contributions yet!</li>
+        <p style="padding-top: 2em"><strong>No contributions yet!</strong></p>
     @endif
 </ul>
 
